@@ -1,72 +1,130 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../utils/api";
 
 export default function Blog() {
+  const [activeTab, setActiveTab] = useState("foundations");
   const navigate = useNavigate();
-  const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  // ✅ simple, safe read
+  // ⭐ NEW: get role
   const role = localStorage.getItem("role");
 
-  /* ================= FETCH BLOGS ================= */
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        const res = await api.get("/api/blogs");
-        setBlogs(res.data);
-      } catch (err) {
-        console.error("Failed to fetch blogs", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // 🔐 CHECK LOGIN BEFORE DOWNLOAD
+  const handleDownload = (pdfUrl) => {
+    const token = localStorage.getItem("token");
 
-    fetchBlogs();
-  }, []);
+    if (!token) {
+      alert("Please login or signup to download this resource.");
+      navigate("/login");
+      return;
+    }
 
-  if (loading) {
-    return <p className="text-center mt-10">Loading blogs...</p>;
-  }
+    // ✅ USER LOGGED IN → DOWNLOAD
+    window.open(pdfUrl, "_blank");
+  };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold mb-6">Blogs</h1>
+    <div className="bg-slate-50 min-h-screen py-20">
+      <div className="max-w-6xl mx-auto px-8">
 
-      {/* ================= ADMIN UPLOAD BUTTON ================= */}
-      {role === "admin" && (
-        <button
-          onClick={() => navigate("/dashboard")}
-          className="mb-6 bg-black text-white px-4 py-2 rounded"
-        >
-          Upload Blog
-        </button>
-      )}
+        {/* HEADER */}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl font-bold text-slate-800">
+            Performance Engineering Blog
+          </h1>
+          <p className="mt-4 text-slate-600 max-w-2xl mx-auto">
+            Learn performance engineering from fundamentals to real-world
+            production-grade practices.
+          </p>
+        </div>
 
-      {/* ================= BLOG LIST ================= */}
-      {blogs.length === 0 ? (
-        <p>No blogs available</p>
-      ) : (
-        blogs.map((blog) => (
-          <div
-            key={blog._id}
-            className="border p-4 rounded mb-4 shadow-sm"
+        {/* TABS */}
+        <div className="flex justify-center gap-6 mb-8">
+          <TabButton
+            active={activeTab === "foundations"}
+            onClick={() => setActiveTab("foundations")}
           >
-            <h2 className="text-xl font-semibold">{blog.title}</h2>
-            <p className="text-gray-600 mb-2">{blog.description}</p>
+            Foundations
+          </TabButton>
 
-            <a
-              href={`https://prefscale-backend.onrender.com/uploads/${blog.pdf}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 font-medium"
+          <TabButton
+            active={activeTab === "deep"}
+            onClick={() => setActiveTab("deep")}
+          >
+            Deep Dive
+          </TabButton>
+        </div>
+
+        {/* ⭐ NEW: ADMIN UPLOAD BUTTON */}
+        {role === "admin" && (
+          <div className="flex justify-center mb-12">
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="bg-black text-white px-6 py-3 rounded-md hover:bg-gray-800 transition"
             >
-              Download PDF
-            </a>
+              Upload Blog (Admin)
+            </button>
           </div>
-        ))
-      )}
+        )}
+
+        {/* CONTENT */}
+        {activeTab === "foundations" && (
+          <Section
+            title="Foundations of Performance Engineering"
+            desc="A practical starting point covering performance testing basics,
+            system behavior, and scalability fundamentals."
+            onDownload={() =>
+              handleDownload("/performance-testing-basics.pdf")
+            }
+            buttonText="Download Foundations Guide (PDF)"
+          />
+        )}
+
+        {activeTab === "deep" && (
+          <Section
+            title="Advanced Performance Engineering"
+            desc="In-depth techniques covering load modeling, bottleneck analysis,
+            capacity planning, and production tuning strategies."
+            onDownload={() =>
+              handleDownload("/advanced-performance-engineering.pdf")
+            }
+            buttonText="Download Advanced Guide (PDF)"
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ================= COMPONENTS ================= */
+
+function TabButton({ children, active, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`px-6 py-2 rounded-full font-medium transition
+        ${
+          active
+            ? "bg-slate-800 text-white"
+            : "bg-white border text-slate-600 hover:bg-slate-100"
+        }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+function Section({ title, desc, onDownload, buttonText }) {
+  return (
+    <div className="bg-white rounded-xl shadow p-10 max-w-4xl mx-auto">
+      <h2 className="text-2xl font-bold text-slate-800">{title}</h2>
+      <p className="mt-4 text-slate-600 leading-relaxed">{desc}</p>
+
+      <button
+        onClick={onDownload}
+        className="inline-block mt-6 bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition"
+      >
+        {buttonText}
+      </button>
     </div>
   );
 }
