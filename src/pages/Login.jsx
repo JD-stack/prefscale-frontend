@@ -22,7 +22,6 @@ export default function Login({ setUser }) {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
 
-      // optional user object
       const userData = {
         name: res.data.name,
         role: res.data.role,
@@ -31,9 +30,9 @@ export default function Login({ setUser }) {
       localStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
 
-      // 🔐 Role-based redirect
+      // ✅ Correct redirect
       if (res.data.role === "admin") {
-        navigate("/admin");
+        navigate("/dashboard");
       } else {
         navigate("/");
       }
