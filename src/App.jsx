@@ -12,8 +12,16 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
   const [user, setUser] = useState(() => {
-    const stored = localStorage.getItem("user");
-    return stored ? JSON.parse(stored) : null;
+    try {
+      const stored = localStorage.getItem("user");
+      // ✅ handle null, "undefined", corrupted JSON
+      if (!stored || stored === "undefined") return null;
+      return JSON.parse(stored);
+    } catch (err) {
+      console.error("Failed to parse user from localStorage", err);
+      localStorage.removeItem("user");
+      return null;
+    }
   });
 
   return (
