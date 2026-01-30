@@ -7,15 +7,8 @@ export default function Blog() {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // ✅ simple, safe read
   const role = localStorage.getItem("role");
-  const token = localStorage.getItem("token");
-
-  /* ================= AUTH CHECK ================= */
-  useEffect(() => {
-    if (!token) {
-      navigate("/login");
-    }
-  }, [token, navigate]);
 
   /* ================= FETCH BLOGS ================= */
   useEffect(() => {
@@ -41,7 +34,7 @@ export default function Blog() {
     <div className="max-w-5xl mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold mb-6">Blogs</h1>
 
-      {/* ================= ADMIN UPLOAD ================= */}
+      {/* ================= ADMIN UPLOAD BUTTON ================= */}
       {role === "admin" && (
         <button
           onClick={() => navigate("/dashboard")}
