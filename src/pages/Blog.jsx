@@ -56,16 +56,16 @@ export default function Blog() {
 
         {/* ⭐ NEW: ADMIN UPLOAD BUTTON */}
         {role === "admin" && (
-          <div className="flex justify-center mb-12">
-            <button
-              onClick={() => navigate("/dashboard")}
-              className="bg-black text-white px-6 py-3 rounded-md hover:bg-gray-800 transition"
-            >
-              Upload Blog (Admin)
-            </button>
-          </div>
-        )}
-
+       {role === "admin" && (
+  <div className="flex justify-center mb-10">
+    <button
+      onClick={() => navigate("/upload-blog")}
+      className="bg-black text-white px-6 py-3 rounded"
+    >
+      Upload Blogs
+    </button>
+  </div>
+)}
         {/* CONTENT */}
         {activeTab === "foundations" && (
           <Section
