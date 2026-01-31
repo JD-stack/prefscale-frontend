@@ -12,7 +12,7 @@ export default function Blog() {
   const token = localStorage.getItem("token");
 
   /* 🔐 CHECK LOGIN BEFORE DOWNLOAD */
-  const handleDownload = (file) => {
+  const handleDownload = (pdf) => {
     if (!token) {
       alert("Please login or signup to download this resource.");
       navigate("/login");
@@ -20,16 +20,19 @@ export default function Blog() {
     }
 
     window.open(
-      `${import.meta.env.VITE_BACKEND_URL}/uploads/${file}`,
+      `${import.meta.env.VITE_BACKEND_URL}/uploads/${pdf}`,
       "_blank"
     );
   };
 
-  /* 📡 FETCH BLOGS FROM BACKEND */
+  /* 📡 FETCH BLOGS BY CATEGORY */
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await api.get("/api/blogs");
+        setLoading(true);
+        const res = await api.get(
+          `/api/blogs?category=${activeTab}`
+        );
         setBlogs(res.data);
       } catch (err) {
         console.error("Failed to fetch blogs", err);
@@ -39,11 +42,7 @@ export default function Blog() {
     };
 
     fetchBlogs();
-  }, []);
-
-  const filteredBlogs = blogs.filter(
-    (b) => b.category === activeTab
-  );
+  }, [activeTab]);
 
   if (loading) {
     return <p className="text-center mt-10">Loading blogs...</p>;
@@ -94,12 +93,12 @@ export default function Blog() {
         )}
 
         {/* BLOG LIST */}
-        {filteredBlogs.length === 0 ? (
+        {blogs.length === 0 ? (
           <p className="text-center text-gray-500">
             No blogs available in this category
           </p>
         ) : (
-          filteredBlogs.map((blog) => (
+          blogs.map((blog) => (
             <div
               key={blog._id}
               className="bg-white rounded-xl shadow p-8 mb-6"
@@ -113,7 +112,7 @@ export default function Blog() {
               </p>
 
               <button
-                onClick={() => handleDownload(blog.file)}
+                onClick={() => handleDownload(blog.pdf)}
                 className="mt-6 bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition"
               >
                 Download File
