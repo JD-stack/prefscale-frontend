@@ -21,25 +21,39 @@ export default function Blog() {
     return true;
   };
 
-  /* 👁️ VIEW FILE (READ ONLINE) */
+  /* 👁️ VIEW PDF (READ ONLINE) */
   const handleView = (fileUrl) => {
     if (!ensureLogin()) return;
-    window.open(fileUrl, "_blank"); // browser PDF viewer
+    window.open(fileUrl, "_blank");
   };
 
-  /* ⬇️ DOWNLOAD FILE */
-  const handleDownload = (fileUrl) => {
+  /* ⬇️ DOWNLOAD PDF WITH CORRECT NAME */
+  const handleDownload = async (fileUrl, title) => {
     if (!ensureLogin()) return;
 
-    const link = document.createElement("a");
-    link.href = fileUrl;
-    link.download = "";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    try {
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      const safeTitle = title.replace(/[^a-zA-Z0-9]/g, "_");
+      link.href = url;
+      link.download = `${safeTitle}.pdf`; // ✅ proper filename
+
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Download failed", err);
+      alert("Failed to download file");
+    }
   };
 
-  /* 🗑️ DELETE (ADMIN ONLY) */
+  /* 🗑️ DELETE BLOG (ADMIN ONLY) */
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this blog?")) return;
 
@@ -152,15 +166,17 @@ export default function Blog() {
                   {/* VIEW */}
                   <button
                     onClick={() => handleView(blog.fileUrl)}
-                    className="bg-slate-700 hover:bg-slate-800 text-white px-5 py-2.5 rounded-lg transition"
+                    className="bg-slate-700 hover:bg-slate-800 text-white px-5 py-2.5 rounded-lg"
                   >
                     View
                   </button>
 
                   {/* DOWNLOAD */}
                   <button
-                    onClick={() => handleDownload(blog.fileUrl)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg transition"
+                    onClick={() =>
+                      handleDownload(blog.fileUrl, blog.title)
+                    }
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg"
                   >
                     Download
                   </button>
@@ -169,7 +185,7 @@ export default function Blog() {
                   {role === "admin" && (
                     <button
                       onClick={() => handleDelete(blog._id)}
-                      className="bg-red-500 hover:bg-red-600 text-white px-5 py-2.5 rounded-lg transition"
+                      className="bg-red-500 hover:bg-red-600 text-white px-5 py-2.5 rounded-lg"
                     >
                       Delete
                     </button>
