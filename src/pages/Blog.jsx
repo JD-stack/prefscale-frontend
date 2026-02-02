@@ -18,9 +18,11 @@ export default function Blog() {
       navigate("/login");
       return;
     }
+    window.open(
+  `${import.meta.env.VITE_BACKEND_URL}/uploads/${blog.pdf}`,
+  "_blank"
+);
 
-    // ✅ CLOUDINARY FILE (DIRECT)
-    window.open(fileUrl, "_blank");
   };
 
   /* 📡 FETCH BLOGS BY CATEGORY */
