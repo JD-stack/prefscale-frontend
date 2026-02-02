@@ -21,11 +21,16 @@ export default function Blog() {
     return true;
   };
 
-  /* 👁️ VIEW PDF (READ ONLINE) */
-  const handleView = (fileUrl) => {
-    if (!ensureLogin()) return;
-    window.open(fileUrl, "_blank");
-  };
+/* 👁️ VIEW PDF (READ ONLINE – NO DOWNLOAD) */
+const handleView = (fileUrl) => {
+  if (!ensureLogin()) return;
+
+  const viewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(
+    fileUrl
+  )}&embedded=true`;
+
+  window.open(viewerUrl, "_blank");
+};
 
   /* ⬇️ DOWNLOAD PDF WITH CORRECT NAME */
   const handleDownload = async (fileUrl, title) => {
