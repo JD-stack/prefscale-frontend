@@ -45,7 +45,7 @@ const handleView = (fileUrl) => {
 
       const safeTitle = title.replace(/[^a-zA-Z0-9]/g, "_");
       link.href = url;
-      link.download = `${safeTitle}.pdf`; // ✅ proper filename
+      link.download = `${safeTitle}.pdf`; // proper filename
 
       document.body.appendChild(link);
       link.click();
