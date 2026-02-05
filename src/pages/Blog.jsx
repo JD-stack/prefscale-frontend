@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
+import { Eye, Download, Trash2, Plus } from "lucide-react";
 
 export default function Blog() {
   const [activeTab, setActiveTab] = useState("foundations");
@@ -22,115 +23,89 @@ export default function Blog() {
   };
 
   /* 📅 FORMAT DATE */
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-IN", {
+  const formatDate = (dateString) =>
+    new Date(dateString).toLocaleDateString("en-IN", {
       day: "2-digit",
       month: "short",
       year: "numeric",
     });
-  };
 
-  /* 👁️ VIEW PDF (READ ONLINE – NO DOWNLOAD) */
+  /* 👁️ VIEW */
   const handleView = (fileUrl) => {
     if (!ensureLogin()) return;
-
     const viewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(
       fileUrl
     )}&embedded=true`;
-
     window.open(viewerUrl, "_blank");
   };
 
-  /* ⬇️ DOWNLOAD PDF WITH CORRECT NAME */
+  /* ⬇️ DOWNLOAD */
   const handleDownload = async (fileUrl, title) => {
     if (!ensureLogin()) return;
 
-    try {
-      const response = await fetch(fileUrl);
-      const blob = await response.blob();
+    const res = await fetch(fileUrl);
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
 
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-
-      const safeTitle = title.replace(/[^a-zA-Z0-9]/g, "_");
-      link.href = url;
-      link.download = `${safeTitle}.pdf`;
-
-      document.body.appendChild(link);
-      link.click();
-
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error("Download failed", err);
-      alert("Failed to download file");
-    }
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${title.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
   };
 
-  /* 🗑️ DELETE BLOG (ADMIN ONLY) */
+  /* 🗑️ DELETE */
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this blog?")) return;
+    if (!window.confirm("Delete this blog permanently?")) return;
 
-    try {
-      await api.delete(`/api/admin/blog/${id}`);
-      setBlogs((prev) => prev.filter((b) => b._id !== id));
-      alert("Blog deleted successfully ✅");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to delete blog ❌");
-    }
+    await api.delete(`/api/admin/blog/${id}`);
+    setBlogs((prev) => prev.filter((b) => b._id !== id));
   };
 
-  /* 📡 FETCH BLOGS */
+  /* 📡 FETCH */
   useEffect(() => {
     const fetchBlogs = async () => {
-      try {
-        setLoading(true);
-        const res = await api.get(`/api/blogs?category=${activeTab}`);
-        setBlogs(res.data);
-      } catch (err) {
-        console.error("Failed to fetch blogs", err);
-      } finally {
-        setLoading(false);
-      }
+      setLoading(true);
+      const res = await api.get(`/api/blogs?category=${activeTab}`);
+      setBlogs(res.data);
+      setLoading(false);
     };
-
     fetchBlogs();
   }, [activeTab]);
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-lg text-slate-600">Loading blogs...</p>
+      <div className="min-h-screen flex items-center justify-center text-slate-500 text-lg">
+        Loading resources…
       </div>
     );
   }
 
   return (
-    <div className="bg-gradient-to-b from-slate-50 to-slate-100 min-h-screen py-20">
-      <div className="max-w-6xl mx-auto px-6">
+    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#020617] to-black py-20">
+      <div className="max-w-7xl mx-auto px-6">
 
         {/* HEADER */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900">
+        <div className="text-center mb-20">
+          <h1 className="text-5xl font-extrabold text-white tracking-tight">
             Performance Engineering Library
           </h1>
-          <p className="mt-4 text-slate-600 max-w-2xl mx-auto">
-            Curated resources covering performance testing, scalability,
-            and production-grade engineering practices.
+          <p className="mt-4 text-slate-400 max-w-2xl mx-auto">
+            High-quality resources on scalability, performance testing and
+            real-world production engineering.
           </p>
         </div>
 
         {/* TABS */}
-        <div className="flex justify-center gap-4 mb-12">
+        <div className="flex justify-center gap-4 mb-14">
           <TabButton
             active={activeTab === "foundations"}
             onClick={() => setActiveTab("foundations")}
           >
             Foundations
           </TabButton>
-
           <TabButton
             active={activeTab === "deep"}
             onClick={() => setActiveTab("deep")}
@@ -139,78 +114,70 @@ export default function Blog() {
           </TabButton>
         </div>
 
-        {/* ADMIN UPLOAD */}
+        {/* ADMIN CTA */}
         {role === "admin" && (
-          <div className="flex justify-center mb-12">
+          <div className="flex justify-center mb-14">
             <button
               onClick={() => navigate("/upload-blog")}
-              className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-lg shadow"
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl shadow-lg transition"
             >
-              + Upload New Blog
+              <Plus size={18} /> Upload New Resource
             </button>
           </div>
         )}
 
-        {/* BLOG LIST */}
+        {/* BLOG GRID */}
         {blogs.length === 0 ? (
-          <p className="text-center text-slate-500">
-            No blogs available in this category
+          <p className="text-center text-slate-400">
+            No resources available.
           </p>
         ) : (
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-10">
             {blogs.map((blog) => (
               <div
                 key={blog._id}
-                className="relative group bg-white rounded-2xl shadow-md p-8 flex flex-col justify-between hover:shadow-lg transition"
+                className="group relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-7 hover:border-blue-500/40 transition"
               >
-                {/* 📅 DATE ON HOVER */}
-                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition">
-                  <span className="text-xs bg-slate-900 text-white px-3 py-1 rounded-full">
+                {/* DATE */}
+                <div className="absolute top-5 right-5 opacity-0 group-hover:opacity-100 transition">
+                  <span className="text-xs bg-black/70 text-white px-3 py-1 rounded-full">
                     {formatDate(blog.createdAt)}
                   </span>
                 </div>
 
-                <div>
-                  <span className="inline-block mb-3 text-xs font-semibold px-3 py-1 rounded-full bg-blue-100 text-blue-700">
-                    {blog.category.toUpperCase()}
-                  </span>
+                <span className="inline-block mb-4 text-xs uppercase tracking-wide bg-blue-500/10 text-blue-400 px-3 py-1 rounded-full">
+                  {blog.category}
+                </span>
 
-                  <h2 className="text-2xl font-bold text-slate-900">
-                    {blog.title}
-                  </h2>
+                <h2 className="text-xl font-bold text-white mb-3">
+                  {blog.title}
+                </h2>
 
-                  <p className="mt-3 text-slate-600 leading-relaxed">
-                    {blog.description}
-                  </p>
-                </div>
+                <p className="text-slate-400 text-sm leading-relaxed mb-8">
+                  {blog.description}
+                </p>
 
-                <div className="mt-6 flex gap-3 flex-wrap">
-                  {/* VIEW */}
-                  <button
+                <div className="flex gap-3 flex-wrap">
+                  <ActionBtn
+                    icon={<Eye size={16} />}
+                    label="View"
                     onClick={() => handleView(blog.fileUrl)}
-                    className="bg-slate-700 hover:bg-slate-800 text-white px-5 py-2.5 rounded-lg"
-                  >
-                    View
-                  </button>
-
-                  {/* DOWNLOAD */}
-                  <button
+                  />
+                  <ActionBtn
+                    icon={<Download size={16} />}
+                    label="Download"
+                    primary
                     onClick={() =>
                       handleDownload(blog.fileUrl, blog.title)
                     }
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg"
-                  >
-                    Download
-                  </button>
-
-                  {/* DELETE */}
+                  />
                   {role === "admin" && (
-                    <button
+                    <ActionBtn
+                      icon={<Trash2 size={16} />}
+                      label="Delete"
+                      danger
                       onClick={() => handleDelete(blog._id)}
-                      className="bg-slate-700 hover:bg-slate-800 text-white px-5 py-2.5 rounded-lg"
-                    >
-                      Delete
-                    </button>
+                    />
                   )}
                 </div>
               </div>
@@ -222,20 +189,37 @@ export default function Blog() {
   );
 }
 
-/* ================= TAB BUTTON ================= */
+/* ================= UI COMPONENTS ================= */
 
 function TabButton({ children, active, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`px-6 py-2 rounded-full font-semibold transition
+      className={`px-7 py-3 rounded-full text-sm font-semibold transition
         ${
           active
-            ? "bg-slate-900 text-white"
-            : "bg-white border text-slate-600 hover:bg-slate-100"
+            ? "bg-blue-600 text-white shadow-lg"
+            : "bg-white/5 text-slate-300 hover:bg-white/10"
         }`}
     >
       {children}
+    </button>
+  );
+}
+
+function ActionBtn({ icon, label, onClick, primary, danger }) {
+  let base =
+    "flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition";
+
+  if (primary)
+    base += " bg-blue-600 hover:bg-blue-700 text-white";
+  else if (danger)
+    base += " bg-red-500/20 hover:bg-red-500/30 text-red-400";
+  else base += " bg-white/5 hover:bg-white/10 text-slate-300";
+
+  return (
+    <button onClick={onClick} className={base}>
+      {icon} {label}
     </button>
   );
 }
