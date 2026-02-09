@@ -10,6 +10,8 @@ import Blog from "./pages/Blog";
 import Dashboard from "./pages/Dashboard";
 import UploadBlog from "./pages/UploadBlog";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Services from "./pages/Services";
+
 
 export default function App() {
   const [user, setUser] = useState(() => {
@@ -31,6 +33,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/services" element={<Services />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/signup" element={<Signup setUser={setUser} />} />
