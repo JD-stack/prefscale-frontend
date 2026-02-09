@@ -88,12 +88,36 @@ export default function Services() {
           </h2>
 
           <div className="grid md:grid-cols-3 gap-10">
-            <ServiceCard icon={<Gauge />} title="Load Testing" desc="Expected concurrent users, stable throughput, SLA validation." />
-            <ServiceCard icon={<Zap />} title="Stress Testing" desc="Breaking points, saturation limits, graceful failures." />
-            <ServiceCard icon={<Activity />} title="Spike Testing" desc="Sudden traffic surges, auto-scaling response." />
-            <ServiceCard icon={<Database />} title="Database Performance" desc="Query latency, pool exhaustion, locking issues." />
-            <ServiceCard icon={<Cloud />} title="Scalability Testing" desc="Cloud limits, elasticity, infra behavior." />
-            <ServiceCard icon={<ShieldCheck />} title="Reliability Engineering" desc="Resilience, fault tolerance, availability." />
+            <ServiceCard
+              icon={<Gauge />}
+              title="Load Testing"
+              desc="Expected concurrent users, stable throughput, and SLA validation."
+            />
+            <ServiceCard
+              icon={<Zap />}
+              title="Stress Testing"
+              desc="Breaking points, saturation limits, and graceful failure behavior."
+            />
+            <ServiceCard
+              icon={<Activity />}
+              title="Spike Testing"
+              desc="Sudden traffic surges and auto-scaling response analysis."
+            />
+            <ServiceCard
+              icon={<Database />}
+              title="Database Performance"
+              desc="Query latency, connection pool exhaustion, and locking issues."
+            />
+            <ServiceCard
+              icon={<Cloud />}
+              title="Scalability Testing"
+              desc="Cloud limits, elasticity, and infrastructure behavior."
+            />
+            <ServiceCard
+              icon={<ShieldCheck />}
+              title="Reliability Engineering"
+              desc="Resilience, fault tolerance, and high availability validation."
+            />
           </div>
         </div>
       </section>
@@ -111,26 +135,10 @@ export default function Services() {
           </p>
 
           <div className="mt-16 grid md:grid-cols-4 gap-10">
-            <MethodStep
-              icon={<Radar />}
-              title="Understand System"
-              desc="Analyze architecture, traffic patterns, and business goals."
-            />
-            <MethodStep
-              icon={<Server />}
-              title="Design Scenarios"
-              desc="Create realistic user journeys and concurrency models."
-            />
-            <MethodStep
-              icon={<BarChart3 />}
-              title="Execute Tests"
-              desc="Run controlled load, stress, spike, and endurance tests."
-            />
-            <MethodStep
-              icon={<Bug />}
-              title="Analyze & Optimize"
-              desc="Identify bottlenecks and provide improvement guidance."
-            />
+            <MethodStep icon={<Radar />} title="Understand System" desc="Analyze architecture and traffic patterns." />
+            <MethodStep icon={<Server />} title="Design Scenarios" desc="Create realistic user journeys and concurrency models." />
+            <MethodStep icon={<BarChart3 />} title="Execute Tests" desc="Run load, stress, spike, and endurance tests." />
+            <MethodStep icon={<Bug />} title="Analyze & Optimize" desc="Identify bottlenecks and performance improvements." />
           </div>
         </div>
       </section>
@@ -139,7 +147,7 @@ export default function Services() {
       <section className="py-24 bg-slate-950 text-white">
         <div className="max-w-6xl mx-auto px-8">
           <h2 className="text-4xl font-bold text-center">
-            What You Get (Deliverables)
+            Deliverables
           </h2>
 
           <p className="mt-6 text-slate-400 text-center max-w-3xl mx-auto">
@@ -201,11 +209,18 @@ function ServiceCard({ icon, title, desc }) {
     <motion.div
       whileHover={{ y: -8 }}
       transition={{ type: "spring", stiffness: 200 }}
-      className="relative bg-gradient-to-br from-slate-900 to-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-sky-500 text-white"
+      className="relative bg-white p-8 rounded-2xl border border-slate-200 shadow hover:shadow-lg"
     >
-      <div className="absolute -top-6 left-6 text-sky-400">{icon}</div>
-      <h3 className="mt-6 text-xl font-semibold">{title}</h3>
-      <p className="mt-3 text-slate-300 text-sm">{desc}</p>
+      <div className="absolute -top-6 left-6 text-sky-600">
+        {icon}
+      </div>
+
+      <h3 className="mt-6 text-xl font-semibold text-slate-900">
+        {title}
+      </h3>
+      <p className="mt-3 text-slate-600 text-sm">
+        {desc}
+      </p>
     </motion.div>
   );
 }
