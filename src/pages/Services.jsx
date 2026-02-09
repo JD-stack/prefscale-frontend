@@ -7,82 +7,77 @@ import {
   Server,
   Database,
   Cloud,
-  Cpu,
-  Radar,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
-const fade = {
-  hidden: { opacity: 0, y: 40 },
+/* ================= PAGE TRANSITION ================= */
+const pageTransition = {
+  hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -30 },
+};
+
+/* ================= TRAFFIC WAVE ================= */
+const wave = {
+  animate: {
+    x: ["0%", "100%"],
+    transition: {
+      repeat: Infinity,
+      duration: 6,
+      ease: "linear",
+    },
+  },
 };
 
 export default function Services() {
   return (
-    <div className="bg-black text-white overflow-hidden">
+    <motion.div
+      variants={pageTransition}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      transition={{ duration: 0.6 }}
+      className="bg-black text-white overflow-hidden"
+    >
 
       {/* ================= HERO ================= */}
       <section className="relative min-h-screen flex items-center justify-center">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_#1e293b,_#020617_70%)]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-black to-slate-900" />
 
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={fade}
-          transition={{ duration: 0.8 }}
-          className="relative z-10 text-center max-w-4xl px-6"
-        >
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight">
-            Performance <span className="text-sky-400">Engineering</span>
+        {/* TRAFFIC WAVES */}
+        <div className="absolute inset-0 overflow-hidden">
+          <motion.div
+            variants={wave}
+            animate="animate"
+            className="absolute top-1/3 w-full h-[2px] bg-gradient-to-r from-transparent via-sky-400 to-transparent opacity-40"
+          />
+          <motion.div
+            variants={wave}
+            animate="animate"
+            className="absolute top-1/2 w-full h-[2px] bg-gradient-to-r from-transparent via-purple-400 to-transparent opacity-30"
+            style={{ animationDelay: "1s" }}
+          />
+          <motion.div
+            variants={wave}
+            animate="animate"
+            className="absolute top-2/3 w-full h-[2px] bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-30"
+            style={{ animationDelay: "2s" }}
+          />
+        </div>
+
+        <div className="relative z-10 text-center max-w-4xl px-6">
+          <h1 className="text-5xl md:text-7xl font-extrabold">
+            Performance <span className="text-sky-400">Services</span>
           </h1>
 
           <p className="mt-8 text-slate-300 text-lg leading-relaxed">
-            We don’t just test applications.  
-            We **simulate reality**, break systems under load,
-            and expose the limits before your users do.
+            We simulate real traffic, push systems to their limits,
+            and expose performance bottlenecks before production users do.
           </p>
-        </motion.div>
-      </section>
-
-      {/* ================= SYSTEM VIEW ================= */}
-      <section className="py-24 bg-gradient-to-b from-black to-slate-900">
-        <div className="max-w-7xl mx-auto px-8">
-          <motion.h2
-            variants={fade}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-4xl font-bold text-center"
-          >
-            Think of Performance as a System
-          </motion.h2>
-
-          <div className="mt-16 grid md:grid-cols-4 gap-8">
-            <SystemBlock
-              icon={<Cpu />}
-              title="Application Layer"
-              desc="API latency, thread contention, async behavior."
-            />
-            <SystemBlock
-              icon={<Database />}
-              title="Database Layer"
-              desc="Query latency, connection pools, locks."
-            />
-            <SystemBlock
-              icon={<Server />}
-              title="Infrastructure"
-              desc="CPU, memory, scaling, load balancers."
-            />
-            <SystemBlock
-              icon={<Cloud />}
-              title="Cloud Limits"
-              desc="Auto-scaling, quotas, shared resources."
-            />
-          </div>
         </div>
       </section>
 
-      {/* ================= SERVICES MATRIX ================= */}
+      {/* ================= SERVICES GRID ================= */}
       <section className="py-24 bg-slate-950">
         <div className="max-w-7xl mx-auto px-8">
           <h2 className="text-4xl font-bold text-center mb-16">
@@ -93,132 +88,69 @@ export default function Services() {
             <ServiceCard
               icon={<Gauge />}
               title="Load Testing"
-              tagline="Can your system handle normal reality?"
-              bullets={[
-                "Concurrent logins",
-                "Steady traffic behavior",
-                "SLA validation",
-              ]}
+              desc="Validate behavior under expected concurrent users."
             />
-
             <ServiceCard
               icon={<Zap />}
               title="Stress Testing"
-              tagline="What breaks first — and how?"
-              bullets={[
-                "Breaking point discovery",
-                "Graceful failure checks",
-                "Recovery analysis",
-              ]}
+              desc="Identify breaking points beyond normal capacity."
             />
-
             <ServiceCard
               icon={<Activity />}
               title="Spike Testing"
-              tagline="What happens when traffic explodes?"
-              bullets={[
-                "Flash sale simulation",
-                "Sudden user bursts",
-                "Auto-scaling reaction",
-              ]}
+              desc="Analyze sudden traffic surges and system reaction."
             />
-
             <ServiceCard
-              icon={<Radar />}
-              title="Endurance Testing"
-              tagline="What fails after hours of load?"
-              bullets={[
-                "Memory leaks",
-                "CPU saturation",
-                "Resource exhaustion",
-              ]}
+              icon={<Database />}
+              title="Database Performance"
+              desc="Expose query latency and connection pool limits."
             />
-
             <ServiceCard
-              icon={<Bug />}
-              title="Bottleneck Detection"
-              tagline="Where is the real slowdown?"
-              bullets={[
-                "Slow APIs",
-                "DB contention",
-                "Concurrency locks",
-              ]}
+              icon={<Cloud />}
+              title="Scalability Testing"
+              desc="Validate cloud scaling, auto-healing and limits."
             />
-
             <ServiceCard
               icon={<ShieldCheck />}
               title="Reliability Engineering"
-              tagline="Can you trust production?"
-              bullets={[
-                "Failure tolerance",
-                "High availability",
-                "System resilience",
-              ]}
+              desc="Ensure graceful failure and system resilience."
             />
           </div>
         </div>
       </section>
 
       {/* ================= WHY IT MATTERS ================= */}
-      <section className="py-24 bg-black">
-        <div className="max-w-6xl mx-auto px-8 text-center">
-          <h2 className="text-4xl font-bold">
-            Why This Is Not Optional
-          </h2>
+      <section className="py-24 bg-black text-center">
+        <h2 className="text-4xl font-bold">
+          Traffic Is Predictable. Failures Are Not.
+        </h2>
 
-          <p className="mt-8 text-slate-400 max-w-3xl mx-auto leading-relaxed">
-            Most production failures are not bugs —  
-            they are **performance limits discovered too late**.
-            <br /><br />
-            PREFSCALE exists to make those limits visible,
-            measurable, and fixable.
-          </p>
-        </div>
+        <p className="mt-8 text-slate-400 max-w-3xl mx-auto leading-relaxed">
+          Most outages are not caused by bugs — they are caused by
+          untested concurrency, saturation, and scaling limits.
+          <br /><br />
+          PREFSCALE makes those limits visible before users experience them.
+        </p>
       </section>
-
-    </div>
-  );
-}
-
-/* ================= COMPONENTS ================= */
-
-function SystemBlock({ icon, title, desc }) {
-  return (
-    <motion.div
-      variants={fade}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      className="bg-slate-900/60 border border-slate-700 p-6 rounded-xl backdrop-blur"
-    >
-      <div className="text-sky-400 mb-4">{icon}</div>
-      <h3 className="font-semibold text-lg">{title}</h3>
-      <p className="mt-2 text-sm text-slate-400">{desc}</p>
     </motion.div>
   );
 }
 
-function ServiceCard({ icon, title, tagline, bullets }) {
+/* ================= COMPONENT ================= */
+
+function ServiceCard({ icon, title, desc }) {
   return (
     <motion.div
-      variants={fade}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      className="relative bg-gradient-to-br from-slate-900 to-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-sky-500 transition"
+      whileHover={{ y: -8 }}
+      transition={{ type: "spring", stiffness: 200 }}
+      className="relative bg-gradient-to-br from-slate-900 to-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-sky-500"
     >
       <div className="absolute -top-6 left-6 text-sky-400">
         {icon}
       </div>
 
       <h3 className="mt-6 text-xl font-semibold">{title}</h3>
-      <p className="mt-2 text-slate-400 text-sm">{tagline}</p>
-
-      <ul className="mt-5 space-y-2 text-sm text-slate-300">
-        {bullets.map((b, i) => (
-          <li key={i}>• {b}</li>
-        ))}
-      </ul>
+      <p className="mt-3 text-slate-400 text-sm">{desc}</p>
     </motion.div>
   );
 }
