@@ -37,7 +37,7 @@ export default function Services() {
       animate="visible"
       exit="exit"
       transition={{ duration: 0.6 }}
-      className="bg-black text-white overflow-hidden"
+      className="bg-slate text-white overflow-hidden"
     >
 
       {/* ================= HERO ================= */}
