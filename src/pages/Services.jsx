@@ -5,230 +5,220 @@ import {
   ShieldCheck,
   Bug,
   Server,
-  BarChart3,
-  Clock,
   Database,
   Cloud,
+  Cpu,
+  Radar,
 } from "lucide-react";
+import { motion } from "framer-motion";
+
+const fade = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0 },
+};
 
 export default function Services() {
   return (
-    <div className="bg-slate-50 min-h-screen">
+    <div className="bg-black text-white overflow-hidden">
 
       {/* ================= HERO ================= */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-black text-white py-24">
-        <div className="max-w-6xl mx-auto px-8 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold">
-            Performance Engineering Services
+      <section className="relative min-h-screen flex items-center justify-center">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_#1e293b,_#020617_70%)]" />
+
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fade}
+          transition={{ duration: 0.8 }}
+          className="relative z-10 text-center max-w-4xl px-6"
+        >
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight">
+            Performance <span className="text-sky-400">Engineering</span>
           </h1>
-          <p className="mt-6 text-slate-300 max-w-3xl mx-auto text-lg">
-            PREFSCALE provides end-to-end performance testing solutions
-            that help teams validate scalability, reliability, and stability
-            before production failures occur.
+
+          <p className="mt-8 text-slate-300 text-lg leading-relaxed">
+            We don’t just test applications.  
+            We **simulate reality**, break systems under load,
+            and expose the limits before your users do.
           </p>
-        </div>
+        </motion.div>
       </section>
 
-      {/* ================= WHAT WE DO ================= */}
-      <section className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-8">
-          <h2 className="text-3xl font-bold text-slate-900 text-center">
-            What We Test & Why It Matters
-          </h2>
+      {/* ================= SYSTEM VIEW ================= */}
+      <section className="py-24 bg-gradient-to-b from-black to-slate-900">
+        <div className="max-w-7xl mx-auto px-8">
+          <motion.h2
+            variants={fade}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-4xl font-bold text-center"
+          >
+            Think of Performance as a System
+          </motion.h2>
 
-          <p className="mt-6 text-slate-600 max-w-3xl mx-auto text-center">
-            Modern applications fail not because of features, but because of
-            unexpected load, traffic spikes, slow databases, and poor scalability.
-            Our services are designed to expose these risks early.
-          </p>
-        </div>
-      </section>
-
-      {/* ================= SERVICES ================= */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-8 grid md:grid-cols-3 gap-10">
-
-          <Service
-            icon={<Gauge />}
-            title="Load Testing"
-            desc="Validate system performance under expected real-world traffic."
-            useCases={[
-              "Can 1,000 users login concurrently?",
-              "Is response time stable under peak hours?",
-              "Does throughput meet SLA targets?",
-            ]}
-            metrics={[
-              "Response time",
-              "Requests per second",
-              "Error rate",
-            ]}
-          />
-
-          <Service
-            icon={<Zap />}
-            title="Stress Testing"
-            desc="Push the system beyond normal limits to identify breaking points."
-            useCases={[
-              "What happens beyond maximum capacity?",
-              "Does the system fail gracefully?",
-              "How fast does recovery happen?",
-            ]}
-            metrics={[
-              "Failure threshold",
-              "Recovery time",
-              "System stability",
-            ]}
-          />
-
-          <Service
-            icon={<Activity />}
-            title="Spike Testing"
-            desc="Evaluate system behavior during sudden traffic surges."
-            useCases={[
-              "Flash sales & product launches",
-              "Viral traffic scenarios",
-              "Unexpected external spikes",
-            ]}
-            metrics={[
-              "Latency spikes",
-              "Auto-scaling behavior",
-              "Error burst analysis",
-            ]}
-          />
-
-          <Service
-            icon={<Clock />}
-            title="Endurance (Soak) Testing"
-            desc="Ensure long-term reliability under sustained load."
-            useCases={[
-              "Memory leak detection",
-              "CPU & resource exhaustion",
-              "Long-running stability",
-            ]}
-            metrics={[
-              "Memory growth",
-              "CPU utilization",
-              "Performance degradation",
-            ]}
-          />
-
-          <Service
-            icon={<Database />}
-            title="Database Performance Testing"
-            desc="Identify database-level bottlenecks impacting application speed."
-            useCases={[
-              "Slow queries under load",
-              "Connection pool saturation",
-              "Concurrency issues",
-            ]}
-            metrics={[
-              "Query latency",
-              "Connection usage",
-              "Lock contention",
-            ]}
-          />
-
-          <Service
-            icon={<Cloud />}
-            title="Scalability & Infrastructure Testing"
-            desc="Validate system scaling behavior across cloud environments."
-            useCases={[
-              "Horizontal scaling validation",
-              "Load balancer efficiency",
-              "Cloud resource limits",
-            ]}
-            metrics={[
-              "Auto-scaling triggers",
-              "Instance saturation",
-              "Availability",
-            ]}
-          />
-        </div>
-      </section>
-
-      {/* ================= HOW WE DELIVER ================= */}
-      <section className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-8">
-          <h2 className="text-3xl font-bold text-slate-900 text-center">
-            How PREFSCALE Delivers Value
-          </h2>
-
-          <div className="mt-14 grid md:grid-cols-3 gap-10 text-center">
-            <Delivery
-              icon={<BarChart3 />}
-              title="Data-Driven Insights"
-              desc="All results are backed by measurable metrics, not assumptions."
+          <div className="mt-16 grid md:grid-cols-4 gap-8">
+            <SystemBlock
+              icon={<Cpu />}
+              title="Application Layer"
+              desc="API latency, thread contention, async behavior."
             />
-            <Delivery
-              icon={<Bug />}
-              title="Early Risk Detection"
-              desc="Identify failures before they impact real users."
+            <SystemBlock
+              icon={<Database />}
+              title="Database Layer"
+              desc="Query latency, connection pools, locks."
             />
-            <Delivery
-              icon={<ShieldCheck />}
-              title="Production Confidence"
-              desc="Release features knowing your system can handle growth."
+            <SystemBlock
+              icon={<Server />}
+              title="Infrastructure"
+              desc="CPU, memory, scaling, load balancers."
+            />
+            <SystemBlock
+              icon={<Cloud />}
+              title="Cloud Limits"
+              desc="Auto-scaling, quotas, shared resources."
             />
           </div>
         </div>
       </section>
 
-      {/* ================= FINAL CTA ================= */}
-      <section className="py-20 bg-gradient-to-r from-slate-800 to-slate-900 text-white text-center">
-        <h2 className="text-3xl font-bold">
-          Test Before Your Users Do
-        </h2>
+      {/* ================= SERVICES MATRIX ================= */}
+      <section className="py-24 bg-slate-950">
+        <div className="max-w-7xl mx-auto px-8">
+          <h2 className="text-4xl font-bold text-center mb-16">
+            What We Test Under Load
+          </h2>
 
-        <p className="mt-4 text-slate-300 max-w-xl mx-auto">
-          Performance failures cost revenue, trust, and reputation.
-          PREFSCALE helps you prevent them.
-        </p>
+          <div className="grid md:grid-cols-3 gap-10">
+            <ServiceCard
+              icon={<Gauge />}
+              title="Load Testing"
+              tagline="Can your system handle normal reality?"
+              bullets={[
+                "Concurrent logins",
+                "Steady traffic behavior",
+                "SLA validation",
+              ]}
+            />
+
+            <ServiceCard
+              icon={<Zap />}
+              title="Stress Testing"
+              tagline="What breaks first — and how?"
+              bullets={[
+                "Breaking point discovery",
+                "Graceful failure checks",
+                "Recovery analysis",
+              ]}
+            />
+
+            <ServiceCard
+              icon={<Activity />}
+              title="Spike Testing"
+              tagline="What happens when traffic explodes?"
+              bullets={[
+                "Flash sale simulation",
+                "Sudden user bursts",
+                "Auto-scaling reaction",
+              ]}
+            />
+
+            <ServiceCard
+              icon={<Radar />}
+              title="Endurance Testing"
+              tagline="What fails after hours of load?"
+              bullets={[
+                "Memory leaks",
+                "CPU saturation",
+                "Resource exhaustion",
+              ]}
+            />
+
+            <ServiceCard
+              icon={<Bug />}
+              title="Bottleneck Detection"
+              tagline="Where is the real slowdown?"
+              bullets={[
+                "Slow APIs",
+                "DB contention",
+                "Concurrency locks",
+              ]}
+            />
+
+            <ServiceCard
+              icon={<ShieldCheck />}
+              title="Reliability Engineering"
+              tagline="Can you trust production?"
+              bullets={[
+                "Failure tolerance",
+                "High availability",
+                "System resilience",
+              ]}
+            />
+          </div>
+        </div>
       </section>
+
+      {/* ================= WHY IT MATTERS ================= */}
+      <section className="py-24 bg-black">
+        <div className="max-w-6xl mx-auto px-8 text-center">
+          <h2 className="text-4xl font-bold">
+            Why This Is Not Optional
+          </h2>
+
+          <p className="mt-8 text-slate-400 max-w-3xl mx-auto leading-relaxed">
+            Most production failures are not bugs —  
+            they are **performance limits discovered too late**.
+            <br /><br />
+            PREFSCALE exists to make those limits visible,
+            measurable, and fixable.
+          </p>
+        </div>
+      </section>
+
     </div>
   );
 }
 
 /* ================= COMPONENTS ================= */
 
-function Service({ icon, title, desc, useCases, metrics }) {
+function SystemBlock({ icon, title, desc }) {
   return (
-    <div className="bg-white p-8 rounded-2xl shadow hover:shadow-xl transition">
-      <div className="text-slate-700 mb-4">{icon}</div>
-
-      <h3 className="text-xl font-semibold text-slate-900">{title}</h3>
-      <p className="mt-3 text-slate-600 text-sm">{desc}</p>
-
-      <div className="mt-5">
-        <h4 className="text-sm font-semibold text-slate-800">Common Use Cases</h4>
-        <ul className="mt-2 list-disc list-inside text-sm text-slate-600 space-y-1">
-          {useCases.map((u, i) => (
-            <li key={i}>{u}</li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="mt-4">
-        <h4 className="text-sm font-semibold text-slate-800">
-          Key Metrics Measured
-        </h4>
-        <ul className="mt-2 list-disc list-inside text-sm text-slate-600 space-y-1">
-          {metrics.map((m, i) => (
-            <li key={i}>{m}</li>
-          ))}
-        </ul>
-      </div>
-    </div>
+    <motion.div
+      variants={fade}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      className="bg-slate-900/60 border border-slate-700 p-6 rounded-xl backdrop-blur"
+    >
+      <div className="text-sky-400 mb-4">{icon}</div>
+      <h3 className="font-semibold text-lg">{title}</h3>
+      <p className="mt-2 text-sm text-slate-400">{desc}</p>
+    </motion.div>
   );
 }
 
-function Delivery({ icon, title, desc }) {
+function ServiceCard({ icon, title, tagline, bullets }) {
   return (
-    <div className="bg-slate-50 p-8 rounded-xl shadow">
-      <div className="flex justify-center text-slate-700 mb-4">
+    <motion.div
+      variants={fade}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      className="relative bg-gradient-to-br from-slate-900 to-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-sky-500 transition"
+    >
+      <div className="absolute -top-6 left-6 text-sky-400">
         {icon}
       </div>
-      <h3 className="font-semibold text-slate-900">{title}</h3>
-      <p className="mt-2 text-slate-600 text-sm">{desc}</p>
-    </div>
+
+      <h3 className="mt-6 text-xl font-semibold">{title}</h3>
+      <p className="mt-2 text-slate-400 text-sm">{tagline}</p>
+
+      <ul className="mt-5 space-y-2 text-sm text-slate-300">
+        {bullets.map((b, i) => (
+          <li key={i}>• {b}</li>
+        ))}
+      </ul>
+    </motion.div>
   );
 }
