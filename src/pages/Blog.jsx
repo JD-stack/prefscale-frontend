@@ -2,6 +2,14 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import { Eye, Download, Trash2, Plus } from "lucide-react";
+import { motion } from "framer-motion";
+
+/* ================= PAGE ANIMATION ================= */
+const pageVariant = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -30 },
+};
 
 export default function Blog() {
   const [activeTab, setActiveTab] = useState("foundations");
@@ -30,7 +38,7 @@ export default function Blog() {
       year: "numeric",
     });
 
-  /* ================= VIEW BLOG ================= */
+  /* ================= VIEW ================= */
   const handleView = (fileUrl) => {
     if (!ensureLogin()) return;
 
@@ -41,7 +49,7 @@ export default function Blog() {
     window.open(viewerUrl, "_blank");
   };
 
-  /* ================= DOWNLOAD BLOG ================= */
+  /* ================= DOWNLOAD ================= */
   const handleDownload = async (fileUrl, title) => {
     if (!ensureLogin()) return;
 
@@ -65,7 +73,7 @@ export default function Blog() {
     }
   };
 
-  /* ================= DELETE BLOG (ADMIN) ================= */
+  /* ================= DELETE (ADMIN) ================= */
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this resource permanently?")) return;
 
@@ -79,7 +87,7 @@ export default function Blog() {
     }
   };
 
-  /* ================= FETCH BLOGS ================= */
+  /* ================= FETCH ================= */
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
@@ -106,7 +114,14 @@ export default function Blog() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#020617] to-black py-20">
+    <motion.div
+      variants={pageVariant}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      transition={{ duration: 0.5 }}
+      className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#020617] to-black py-20"
+    >
       <div className="max-w-7xl mx-auto px-6">
 
         {/* ================= HEADER ================= */}
@@ -139,14 +154,17 @@ export default function Blog() {
 
         {/* ================= ADMIN CTA ================= */}
         {role === "admin" && (
-          <div className="flex justify-center mb-14">
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="flex justify-center mb-14"
+          >
             <button
               onClick={() => navigate("/upload-blog")}
               className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl shadow-lg transition"
             >
               <Plus size={18} /> Upload New Resource
             </button>
-          </div>
+          </motion.div>
         )}
 
         {/* ================= BLOG GRID ================= */}
@@ -157,11 +175,13 @@ export default function Blog() {
         ) : (
           <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-10">
             {blogs.map((blog) => (
-              <div
+              <motion.div
                 key={blog._id}
-                className="group relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-7 hover:border-blue-500/40 transition"
+                whileHover={{ scale: 1.03, y: -6 }}
+                transition={{ type: "spring", stiffness: 200 }}
+                className="group relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-7 hover:border-blue-500/40"
               >
-                {/* DATE (HOVER) */}
+                {/* DATE */}
                 <div className="absolute top-5 right-5 opacity-0 group-hover:opacity-100 transition">
                   <span className="text-xs bg-black/70 text-white px-3 py-1 rounded-full">
                     {formatDate(blog.createdAt)}
@@ -209,12 +229,12 @@ export default function Blog() {
                     />
                   )}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -222,7 +242,8 @@ export default function Blog() {
 
 function TabButton({ children, active, onClick }) {
   return (
-    <button
+    <motion.button
+      whileHover={{ scale: 1.05 }}
       onClick={onClick}
       className={`px-7 py-3 rounded-full text-sm font-semibold transition
         ${
@@ -232,7 +253,7 @@ function TabButton({ children, active, onClick }) {
         }`}
     >
       {children}
-    </button>
+    </motion.button>
   );
 }
 
@@ -249,8 +270,13 @@ function ActionBtn({ icon, label, onClick, primary, danger }) {
   }
 
   return (
-    <button onClick={onClick} className={base}>
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={onClick}
+      className={base}
+    >
       {icon} {label}
-    </button>
+    </motion.button>
   );
 }
