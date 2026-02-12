@@ -18,7 +18,7 @@ export default function Navbar({ user, setUser }) {
       <div className="flex items-center gap-6 text-gray-700">
         <Link to="/">Home</Link>
         <Link to="/about">About</Link>
-        <Link to="/services">Services</Link>
+        <Link to="/services">Capabilities</Link>
         <Link to="/blog">Blog</Link>
 
         {user ? (
