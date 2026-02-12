@@ -70,7 +70,7 @@ export default function Services() {
 
         <div className="relative z-10 text-center max-w-4xl px-6">
           <h1 className="text-5xl md:text-7xl font-extrabold">
-            Performance <span className="text-sky-400">Services</span>
+            Performance <span className="text-sky-400">Capabilities</span>
           </h1>
 
           <p className="mt-8 text-slate-300 text-lg leading-relaxed">
